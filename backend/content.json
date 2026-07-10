@@ -1,0 +1,149 @@
+{
+  "password": "1072006",
+  "hero": {
+    "pre": "✨ For You, My Love ✨",
+    "sub": "Today is all about celebrating the most beautiful person in my world.",
+    "body": "Every smile of yours lights up my life, and every moment with you becomes a memory I never want to lose.",
+    "cta": "Open My Surprise 💝"
+  },
+  "story": {
+    "title": "Our Beautiful Journey ✨",
+    "sub": "Every chapter written together",
+    "items": [
+      {
+        "icon": "💬",
+        "title": "Where It All Began",
+        "text": "From our very first conversation, something shifted in my world."
+      },
+      {
+        "icon": "🌹",
+        "title": "Falling For You",
+        "text": "Every laugh, every glance — I found myself falling deeper every day."
+      },
+      {
+        "icon": "💑",
+        "title": "Us Against The World",
+        "text": "Side by side, we turned ordinary moments into extraordinary memories."
+      },
+      {
+        "icon": "🌟",
+        "title": "Today & Always",
+        "text": "You have brought happiness, warmth, and meaning into my world in ways I never imagined."
+      }
+    ]
+  },
+  "gallery": {
+    "title": "Our Favorite Memories 📸",
+    "sub": "",
+    "photos": [
+      {
+        "label": "Tum",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      },
+      {
+        "label": "Bus Tum",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      },
+      {
+        "label": "Bus Tum Ho",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      },
+      {
+        "label": "Bus Tum Ho Rahogi",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      },
+      {
+        "label": "hai Bus Tum Ho Rahogi",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      },
+      {
+        "label": "han bus Tumhen hi Rahana hai",
+        "url": "/images/1783615604196-658996858_18085527137337424_8584076664170005720_n.jpg"
+      }
+    ]
+  },
+  "reasons": {
+    "title": "10 Reasons Why I Love You ❤️",
+    "sub": "Let me count the ways…",
+    "items": [
+      {
+        "icon": "😊",
+        "text": "Your beautiful smile"
+      },
+      {
+        "icon": "💝",
+        "text": "Your caring heart"
+      },
+      {
+        "icon": "🌸",
+        "text": "Your kindness"
+      },
+      {
+        "icon": "✨",
+        "text": "Your honesty"
+      },
+      {
+        "icon": "😄",
+        "text": "Your sense of humor"
+      },
+      {
+        "icon": "🤝",
+        "text": "Your support"
+      },
+      {
+        "icon": "🧠",
+        "text": "Your intelligence"
+      },
+      {
+        "icon": "💪",
+        "text": "Your strength"
+      },
+      {
+        "icon": "🌟",
+        "text": "The happiness you bring into my life"
+      },
+      {
+        "icon": "💖",
+        "text": "Because you are uniquely you"
+      }
+    ]
+  },
+  "letter": {
+    "title": "A Letter From My Heart 💌",
+    "body": "Someone once said something very true: when I wasn’t even looking for you, I found you. But now I want you to stay with me forever. I feel like you are the one person I have been looking for all this time. Now that I have found you, I don’t want anything else. Don’t worry, I am with you in every situation and every condition. Whenever you need me, I will be there with you, and I will never let go of your hand. I will never fall short in loving you. I have so many things to write, but I feel like this space will not be enough because there is so much love that it cannot be expressed in words.\n",
+    "sign": "— Dear Bhoomi"
+  },
+  "wish": {
+    "title": "My Birthday Wish For You 🎂",
+    "body": "I want you to always be happy, and I hope you get everything you want. May all your dreams come true. I am with you in every situation, and I will always be there for you. May you always have good health and stay happy wherever you are.\n",
+    "icons": "🌸 🎂 🌟 💐 🎁 ✨"
+  },
+  "proposal": {
+    "title": "One More Special Surprise ❤️",
+    "sub": "There is something I have wanted to tell you from the bottom of my heart.",
+    "heading": "Will You Be Mine Forever? 💍",
+    "body": "Even though we haven’t met yet and we only talk on calls, somehow you have become such a special part of my life. I really enjoy every conversation we have, and talking to you has become one of my favorite parts of the day. I don’t just want to celebrate your birthday today, I hope one day I can be there with you to celebrate your future birthdays, your dreams, your success, and all the beautiful moments in your life. I don’t know what the future holds, but I do know that I want you to be a part of it. I love you. ❤️\n",
+    "btn1": "💖 YES, FOREVER",
+    "btn2": "🥰 ABSOLUTELY YES",
+    "celebration": "🎉 You Just Made Me The Happiest Person In The World ❤️"
+  },
+  "forever": {
+    "title": "Forever Starts Here 💕",
+    "body": "We haven’t met yet, but somehow you have already become such a special part of my life. I don’t know what forever holds, but if I had a choice, I’d choose you to be a part of mine. ❤️"
+  },
+  "footer": {
+    "text": ""
+  },
+  "login": {
+    "pageTitle": "❤️ A Special Surprise Awaits ❤️",
+    "heading": "Welcome, My Love",
+    "subheading": "Enter your special date to unlock your surprise.",
+    "placeholder": "Enter Your Birthday",
+    "btnText": "Unlock My Surprise ❤️",
+    "errorMsg": "Oops! Try your special date again ❤️",
+    "successMsg": "Welcome, Beautiful ❤️",
+    "successSub": "Your surprise is waiting for you...",
+    "tagline": "Made with endless love, just for you 💕",
+    "hint": "Hint: the day you came into this world 🌸"
+  }
+}

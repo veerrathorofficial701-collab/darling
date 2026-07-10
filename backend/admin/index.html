@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>💖 Admin Login</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Poppins',sans-serif;
+    background:radial-gradient(ellipse at 30% 20%,#4a0025 0%,#1a0010 50%,#0d000a 100%);
+    min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;color:#fff;overflow:hidden;
+  }
+  .orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;}
+  .orb-1{width:500px;height:500px;background:radial-gradient(circle,rgba(255,77,141,0.25),transparent 70%);top:-120px;left:-100px;}
+  .orb-2{width:400px;height:400px;background:radial-gradient(circle,rgba(255,215,0,0.12),transparent 70%);bottom:-80px;right:-80px;}
+
+  .card{
+    position:relative;z-index:10;
+    width:min(420px,92vw);
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(24px);
+    border-radius:28px;padding:44px 40px 36px;
+    text-align:center;
+    box-shadow:0 8px 40px rgba(255,77,141,0.2);
+    animation:cardIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(0.96)}to{opacity:1;transform:none}}
+
+  .logo{font-size:3rem;margin-bottom:4px;filter:drop-shadow(0 0 16px rgba(255,77,141,0.8));}
+  h1{font-family:'Great Vibes',cursive;font-size:2.6rem;color:#fff;text-shadow:0 0 20px rgba(255,77,141,0.7);margin-bottom:6px;}
+  .sub{font-size:0.82rem;color:rgba(255,192,203,0.6);letter-spacing:1px;margin-bottom:28px;}
+
+  .divider{display:flex;align-items:center;gap:10px;margin-bottom:24px;opacity:0.5;}
+  .divider span{flex:1;height:1px;background:linear-gradient(90deg,transparent,#FFD700,transparent);}
+  .divider i{color:#FFD700;font-size:0.7rem;}
+
+  .field{margin-bottom:16px;text-align:left;}
+  .field label{display:block;font-size:0.75rem;color:rgba(255,192,203,0.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .field input{
+    width:100%;padding:12px 16px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,182,193,0.3);
+    border-radius:12px;color:#fff;font-size:0.95rem;
+    font-family:'Poppins',sans-serif;outline:none;
+    transition:border-color 0.25s,box-shadow 0.25s;
+  }
+  .field input:focus{border-color:rgba(255,77,141,0.7);box-shadow:0 0 0 3px rgba(255,77,141,0.12);}
+
+  .btn{
+    width:100%;padding:14px;margin-top:8px;
+    background:linear-gradient(135deg,#FF4D8D,#c9184a);
+    color:#fff;border:none;border-radius:12px;
+    font-size:1rem;font-weight:600;font-family:'Poppins',sans-serif;
+    cursor:pointer;letter-spacing:0.5px;
+    box-shadow:0 6px 24px rgba(255,77,141,0.4);
+    transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.25s;
+  }
+  .btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 10px 32px rgba(255,77,141,0.55);}
+  .btn:active{transform:scale(0.98);}
+  .btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+  .error{
+    margin-top:14px;padding:10px 16px;
+    background:rgba(255,77,109,0.12);
+    border:1px solid rgba(255,77,109,0.3);
+    border-radius:10px;font-size:0.85rem;color:#FFB6C1;
+    display:none;animation:fadeIn 0.3s ease;
+  }
+  .error.show{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+  .tagline{margin-top:20px;font-family:'Great Vibes',cursive;font-size:1.2rem;color:rgba(255,182,193,0.35);z-index:10;}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="card">
+  <div class="logo">💖</div>
+  <h1>Admin Panel</h1>
+  <p class="sub">BIRTHDAY SURPRISE DASHBOARD</p>
+
+  <div class="divider"><span></span><i>✦</i><span></span></div>
+
+  <form id="form">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="Enter username" autocomplete="username"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password"/>
+    </div>
+    <button type="submit" class="btn" id="btn">Login to Dashboard 💝</button>
+    <div class="error" id="error">❌ Invalid username or password</div>
+  </form>
+</div>
+
+<p class="tagline">Made with endless love ❤️</p>
+
+<script>
+  // If already logged in, go straight to dashboard
+  const token = localStorage.getItem('adminToken');
+  if (token) {
+    fetch('http://localhost:4000/api/admin/verify', { headers: { 'x-admin-token': token } })
+      .then(r => r.json())
+      .then(d => { if (d.ok) window.location.href = '/dashboard.html'; })
+      .catch(() => {});
+  }
+
+  document.getElementById('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn');
+    const err = document.getElementById('error');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    btn.disabled = true;
+    btn.textContent = 'Logging in…';
+    err.classList.remove('show');
+
+    try {
+      const r = await fetch('http://localhost:4000/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await r.json();
+      if (data.ok) {
+        localStorage.setItem('adminToken', data.token);
+        window.location.href = '/dashboard.html';
+      } else {
+        throw new Error();
+      }
+    } catch {
+      err.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Login to Dashboard 💝';
+    }
+  });
+</script>
+</body>
+</html>

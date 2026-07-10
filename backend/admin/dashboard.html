@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>💖 Birthday Admin — Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --rose:#FF4D8D;--pink:#FFB6C1;--gold:#FFD700;
+    --bg:#0f0008;--card:rgba(255,255,255,0.05);--border:rgba(255,255,255,0.12);
+    --input-bg:rgba(255,255,255,0.07);--text:#f0e0e8;--muted:rgba(240,224,232,0.5);
+  }
+  body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:240px;
+    background:rgba(255,255,255,0.04);border-right:1px solid var(--border);
+    display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+  }
+  .sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid var(--border);}
+  .sidebar-logo h1{font-size:1.1rem;color:var(--rose);font-weight:600;line-height:1.3;}
+  .sidebar-logo p{font-size:0.72rem;color:var(--muted);margin-top:4px;}
+  nav{flex:1;padding:12px 0;}
+  nav a{
+    display:flex;align-items:center;gap:10px;
+    padding:11px 20px;font-size:0.85rem;color:var(--muted);
+    text-decoration:none;transition:all 0.2s;border-left:3px solid transparent;cursor:pointer;
+  }
+  nav a:hover{color:var(--text);background:rgba(255,255,255,0.05);}
+  nav a.active{color:var(--rose);border-left-color:var(--rose);background:rgba(255,77,141,0.08);}
+  .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;}
+  .save-all-btn{
+    width:100%;padding:12px;background:linear-gradient(135deg,var(--rose),#c9184a);
+    color:#fff;border:none;border-radius:10px;font-size:0.9rem;font-weight:600;
+    cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
+  }
+  .save-all-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,77,141,0.4);}
+  .logout-btn{
+    width:100%;padding:10px;background:rgba(255,255,255,0.06);
+    color:var(--muted);border:1px solid var(--border);border-radius:10px;
+    font-size:0.85rem;cursor:pointer;transition:all 0.2s;
+  }
+  .logout-btn:hover{background:rgba(255,77,109,0.15);color:#fff;border-color:rgba(255,77,109,0.4);}
+
+  .main{margin-left:240px;padding:32px;min-height:100vh;}
+  .page-header{margin-bottom:28px;}
+  .page-header h2{font-size:1.5rem;font-weight:600;color:#fff;}
+  .page-header p{font-size:0.85rem;color:var(--muted);margin-top:4px;}
+
+  .section{display:none;}
+  .section.active{display:block;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+  .card h3{font-size:0.95rem;font-weight:600;color:var(--pink);margin-bottom:16px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:0.78rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+  .field input[type=text],.field textarea{
+    width:100%;padding:10px 14px;
+    background:var(--input-bg);border:1px solid var(--border);
+    border-radius:10px;color:var(--text);font-size:0.88rem;font-family:'Poppins',sans-serif;
+    outline:none;transition:border-color 0.2s,box-shadow 0.2s;resize:vertical;
+  }
+  .field input:focus,.field textarea:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(255,77,141,0.12);}
+  .field textarea{min-height:90px;line-height:1.6;}
+
+  .array-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;position:relative;}
+  .item-num{position:absolute;top:14px;right:14px;font-size:0.72rem;color:var(--muted);background:rgba(255,255,255,0.06);padding:2px 8px;border-radius:20px;}
+  .inline-fields{display:grid;grid-template-columns:80px 1fr;gap:12px;}
+
+  .img-upload-area{border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;position:relative;overflow:hidden;}
+  .img-upload-area:hover{border-color:var(--rose);background:rgba(255,77,141,0.04);}
+  .img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .preview{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-bottom:10px;display:none;}
+  .preview.show{display:block;}
+  .upload-icon{font-size:2rem;margin-bottom:8px;}
+  .upload-hint{font-size:0.82rem;color:var(--muted);}
+  .uploading-badge{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;font-size:0.9rem;color:#fff;border-radius:12px;}
+  .uploading-badge.show{display:flex;}
+  .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+
+  #toast{position:fixed;bottom:28px;right:28px;z-index:9999;padding:12px 22px;border-radius:12px;font-size:0.88rem;font-weight:500;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;}
+  #toast.show{opacity:1;transform:translateY(0);}
+  #toast.success{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;}
+  #toast.error{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;}
+
+  @media(max-width:768px){
+    .sidebar{width:100%;height:auto;position:relative;}
+    .main{margin-left:0;padding:16px;}
+    nav{display:flex;flex-wrap:wrap;padding:8px;}
+    nav a{padding:8px 12px;font-size:0.78rem;}
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>💖 Birthday Admin</h1>
+    <p>Edit everything on your site</p>
+  </div>
+  <nav id="nav">
+    <a data-section="login" class="active">🔐 Login Page</a>
+    <a data-section="hero">🌹 Hero</a>
+    <a data-section="story">📖 Our Story</a>
+    <a data-section="gallery">📸 Gallery</a>
+    <a data-section="reasons">❤️ Reasons</a>
+    <a data-section="letter">💌 Love Letter</a>
+    <a data-section="wish">🎂 Birthday Wish</a>
+    <a data-section="proposal">💍 Proposal</a>
+    <a data-section="forever">💕 Forever</a>
+    <a data-section="footer">✨ Footer</a>
+  </nav>
+  <div class="sidebar-footer">
+    <button class="save-all-btn" onclick="saveAll()">💾 Save All Changes</button>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+  </div>
+</aside>
+
+<main class="main">
+
+  <div id="sec-login" class="section active">
+    <div class="page-header"><h2>🔐 Login Page</h2><p>The first page visitors see</p></div>
+    <div class="card">
+      <h3>🔑 Site Password</h3>
+      <div class="field"><label>Password</label><input type="text" data-path="password"/></div>
+    </div>
+    <div class="card">
+      <h3>📝 Text Content</h3>
+      <div class="field"><label>Page Title</label><input type="text" data-path="login.pageTitle"/></div>
+      <div class="field"><label>Heading</label><input type="text" data-path="login.heading"/></div>
+      <div class="field"><label>Subheading</label><input type="text" data-path="login.subheading"/></div>
+      <div class="field"><label>Input Placeholder</label><input type="text" data-path="login.placeholder"/></div>
+      <div class="field"><label>Button Text</label><input type="text" data-path="login.btnText"/></div>
+      <div class="field"><label>Error Message</label><input type="text" data-path="login.errorMsg"/></div>
+      <div class="field"><label>Success Message</label><input type="text" data-path="login.successMsg"/></div>
+      <div class="field"><label>Success Sub-text</label><input type="text" data-path="login.successSub"/></div>
+      <div class="field"><label>Tagline</label><input type="text" data-path="login.tagline"/></div>
+      <div class="field"><label>Hint Text</label><input type="text" data-path="login.hint"/></div>
+    </div>
+  </div>
+
+  <div id="sec-hero" class="section">
+    <div class="page-header"><h2>🌹 Hero Section</h2></div>
+    <div class="card">
+      <h3>📝 Text</h3>
+      <div class="field"><label>Pre-title</label><input type="text" data-path="hero.pre"/></div>
+      <div class="field"><label>Subheading</label><input type="text" data-path="hero.sub"/></div>
+      <div class="field"><label>Body Text</label><textarea data-path="hero.body"></textarea></div>
+      <div class="field"><label>CTA Button</label><input type="text" data-path="hero.cta"/></div>
+    </div>
+  </div>
+
+  <div id="sec-story" class="section">
+    <div class="page-header"><h2>📖 Our Story</h2></div>
+    <div class="card">
+      <h3>📝 Section Header</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="story.title"/></div>
+      <div class="field"><label>Sub-label</label><input type="text" data-path="story.sub"/></div>
+    </div>
+    <div class="card"><h3>🗓️ Timeline Items</h3><div id="story-items"></div></div>
+  </div>
+
+  <div id="sec-gallery" class="section">
+    <div class="page-header"><h2>📸 Gallery</h2></div>
+    <div class="card">
+      <h3>📝 Section Header</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="gallery.title"/></div>
+      <div class="field"><label>Sub-label</label><input type="text" data-path="gallery.sub"/></div>
+    </div>
+    <div class="card"><h3>🖼️ Photos</h3><div id="gallery-photos" class="photo-grid"></div></div>
+  </div>
+
+  <div id="sec-reasons" class="section">
+    <div class="page-header"><h2>❤️ Reasons I Love You</h2></div>
+    <div class="card">
+      <h3>📝 Section Header</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="reasons.title"/></div>
+      <div class="field"><label>Sub-label</label><input type="text" data-path="reasons.sub"/></div>
+    </div>
+    <div class="card"><h3>💝 Reason Cards</h3><div id="reasons-items"></div></div>
+  </div>
+
+  <div id="sec-letter" class="section">
+    <div class="page-header"><h2>💌 Love Letter</h2></div>
+    <div class="card">
+      <h3>📝 Content</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="letter.title"/></div>
+      <div class="field"><label>Letter Body</label><textarea data-path="letter.body" style="min-height:140px"></textarea></div>
+      <div class="field"><label>Sign-off</label><input type="text" data-path="letter.sign"/></div>
+    </div>
+  </div>
+
+  <div id="sec-wish" class="section">
+    <div class="page-header"><h2>🎂 Birthday Wish</h2></div>
+    <div class="card">
+      <h3>📝 Content</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="wish.title"/></div>
+      <div class="field"><label>Body</label><textarea data-path="wish.body"></textarea></div>
+      <div class="field"><label>Icons Row</label><input type="text" data-path="wish.icons"/></div>
+    </div>
+  </div>
+
+  <div id="sec-proposal" class="section">
+    <div class="page-header"><h2>💍 Proposal</h2></div>
+    <div class="card">
+      <h3>📝 Content</h3>
+      <div class="field"><label>Section Title</label><input type="text" data-path="proposal.title"/></div>
+      <div class="field"><label>Sub-text</label><input type="text" data-path="proposal.sub"/></div>
+      <div class="field"><label>Big Heading (typewriter)</label><input type="text" data-path="proposal.heading"/></div>
+      <div class="field"><label>Proposal Body</label><textarea data-path="proposal.body" style="min-height:140px"></textarea></div>
+      <div class="field"><label>Button 1</label><input type="text" data-path="proposal.btn1"/></div>
+      <div class="field"><label>Button 2</label><input type="text" data-path="proposal.btn2"/></div>
+      <div class="field"><label>Celebration Message</label><input type="text" data-path="proposal.celebration"/></div>
+    </div>
+  </div>
+
+  <div id="sec-forever" class="section">
+    <div class="page-header"><h2>💕 Forever Section</h2></div>
+    <div class="card">
+      <h3>📝 Content</h3>
+      <div class="field"><label>Title</label><input type="text" data-path="forever.title"/></div>
+      <div class="field"><label>Body</label><textarea data-path="forever.body"></textarea></div>
+    </div>
+  </div>
+
+  <div id="sec-footer" class="section">
+    <div class="page-header"><h2>✨ Footer</h2></div>
+    <div class="card">
+      <h3>📝 Content</h3>
+      <div class="field"><label>Footer Text</label><input type="text" data-path="footer.text"/></div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:4000';
+let content = {};
+let TOKEN = localStorage.getItem('adminToken') || '';
+
+// ── Auth guard ───────────────────────────────────────────
+async function checkAuth() {
+  if (!TOKEN) { window.location.href = '/'; return; }
+  try {
+    const r = await fetch(`${API}/api/admin/verify`, { headers: { 'x-admin-token': TOKEN } });
+    const d = await r.json();
+    if (!d.ok) { localStorage.removeItem('adminToken'); window.location.href = '/'; }
+  } catch { window.location.href = '/'; }
+}
+
+function logout() {
+  fetch(`${API}/api/admin/logout`, { method: 'POST', headers: { 'x-admin-token': TOKEN } }).catch(() => {});
+  localStorage.removeItem('adminToken');
+  window.location.href = '/';
+}
+
+// ── Authenticated fetch helpers ──────────────────────────
+function authGet(url) {
+  return fetch(url, { headers: { 'x-admin-token': TOKEN } });
+}
+function authPut(url, body) {
+  return fetch(url, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'x-admin-token': TOKEN }, body: JSON.stringify(body) });
+}
+function authPost(url, formData) {
+  return fetch(url, { method: 'POST', headers: { 'x-admin-token': TOKEN }, body: formData });
+}
+
+// ── Nav ──────────────────────────────────────────────────
+document.getElementById('nav').addEventListener('click', e => {
+  const a = e.target.closest('[data-section]');
+  if (!a) return;
+  document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x => x.classList.remove('active'));
+  a.classList.add('active');
+  document.getElementById('sec-' + a.dataset.section).classList.add('active');
+});
+
+// ── Toast ────────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  setTimeout(() => el.className = '', 3500);
+}
+
+// ── Path helpers ─────────────────────────────────────────
+function getPath(obj, path) {
+  return path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
+}
+function setPath(obj, path, val) {
+  const keys = path.split('.');
+  let cur = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    const k = keys[i];
+    const nextIsIndex = /^\d+$/.test(keys[i + 1]);
+    if (cur[k] == null) cur[k] = nextIsIndex ? [] : {};
+    cur = cur[k];
+  }
+  cur[keys[keys.length - 1]] = val;
+}
+
+function fillInputs() {
+  document.querySelectorAll('[data-path]').forEach(el => {
+    const val = getPath(content, el.dataset.path);
+    if (val !== undefined && typeof val === 'string') el.value = val;
+  });
+}
+
+function buildStoryItems() {
+  const wrap = document.getElementById('story-items');
+  wrap.innerHTML = '';
+  (content.story?.items || []).forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'array-item';
+    div.innerHTML = `
+      <span class="item-num">#${i+1}</span>
+      <div class="inline-fields">
+        <div class="field"><label>Icon</label><input type="text" data-path="story.items.${i}.icon" value="${esc(item.icon)}"/></div>
+        <div class="field"><label>Title</label><input type="text" data-path="story.items.${i}.title" value="${esc(item.title)}"/></div>
+      </div>
+      <div class="field"><label>Text</label><textarea data-path="story.items.${i}.text">${esc(item.text)}</textarea></div>`;
+    wrap.appendChild(div);
+  });
+}
+
+function buildReasonsItems() {
+  const wrap = document.getElementById('reasons-items');
+  wrap.innerHTML = '';
+  (content.reasons?.items || []).forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'array-item';
+    div.innerHTML = `
+      <span class="item-num">#${i+1}</span>
+      <div class="inline-fields">
+        <div class="field"><label>Icon</label><input type="text" data-path="reasons.items.${i}.icon" value="${esc(item.icon)}"/></div>
+        <div class="field"><label>Reason</label><input type="text" data-path="reasons.items.${i}.text" value="${esc(item.text)}"/></div>
+      </div>`;
+    wrap.appendChild(div);
+  });
+}
+
+function buildGallery() {
+  const wrap = document.getElementById('gallery-photos');
+  wrap.innerHTML = '';
+  (content.gallery?.photos || []).forEach((photo, i) => {
+    const hasImg = photo.url && photo.url.trim() !== '';
+    const imgSrc = hasImg ? (photo.url.startsWith('/') ? API + photo.url : photo.url) : '';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.margin = '0';
+    div.innerHTML = `
+      <div class="field">
+        <label>Label for photo ${i+1}</label>
+        <input type="text" data-path="gallery.photos.${i}.label" value="${esc(photo.label)}"/>
+      </div>
+      <div class="img-upload-area">
+        <img class="preview ${hasImg ? 'show' : ''}" id="preview-${i}" src="${imgSrc}" alt=""/>
+        <div class="uploading-badge" id="badge-${i}">⏳ Uploading…</div>
+        <div class="upload-icon">📷</div>
+        <p class="upload-hint">${hasImg ? 'Click to replace photo' : 'Click to upload photo ' + (i+1)}</p>
+        <input type="file" accept="image/*" onchange="uploadPhoto(this,${i})"/>
+      </div>`;
+    wrap.appendChild(div);
+  });
+}
+
+async function uploadPhoto(input, idx) {
+  const file = input.files[0];
+  if (!file) return;
+  const badge   = document.getElementById(`badge-${idx}`);
+  const preview = document.getElementById(`preview-${idx}`);
+  badge.classList.add('show');
+  const fd = new FormData();
+  fd.append('image', file);
+  try {
+    const r = await authPost(`${API}/api/upload`, fd);
+    if (r.status === 401) { toast('❌ Session expired — please log in again', 'error'); logout(); return; }
+    const { url } = await r.json();
+    content.gallery.photos[idx].url = url;
+    preview.src = API + url;
+    preview.classList.add('show');
+    await authPut(`${API}/api/content`, content);
+    toast(`✅ Photo ${idx + 1} uploaded and saved!`);
+  } catch { toast('❌ Upload failed', 'error'); }
+  finally { badge.classList.remove('show'); }
+}
+
+function collectInputs() {
+  document.querySelectorAll('[data-path]').forEach(el => setPath(content, el.dataset.path, el.value));
+}
+
+async function saveAll() {
+  collectInputs();
+  try {
+    const r = await authPut(`${API}/api/content`, content);
+    if (r.status === 401) { toast('❌ Session expired — please log in again', 'error'); logout(); return; }
+    if (!r.ok) throw new Error();
+    toast('✅ All changes saved!');
+  } catch { toast('❌ Save failed', 'error'); }
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function init() {
+  await checkAuth();
+  try {
+    const r = await authGet(`${API}/api/content`);
+    content = await r.json();
+    fillInputs();
+    buildStoryItems();
+    buildReasonsItems();
+    buildGallery();
+    toast('✅ Dashboard loaded!');
+  } catch { toast('❌ Cannot reach backend at localhost:4000', 'error'); }
+}
+
+init();
+</script>
+</body>
+</html>
